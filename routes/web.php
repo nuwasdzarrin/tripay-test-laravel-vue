@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ShopController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,10 +21,18 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Auth::routes();
 Route::group(['prefix' => 'sellers'], function () {
-    Auth::routes();
     Route::middleware('auth')->group(function () {
         Route::get('/', function () {return redirect()->route('products.index');});
+        Route::resource('products', ProductController::class);
+        Route::resource('invoices', InvoiceController::class);
+    });
+});
+
+Route::group(['prefix' => 'shops'], function () {
+    Route::get('/', [ShopController::class, 'index'])->name('shops.index');
+    Route::middleware('auth')->group(function () {
         Route::resource('products', ProductController::class);
         Route::resource('invoices', InvoiceController::class);
     });
