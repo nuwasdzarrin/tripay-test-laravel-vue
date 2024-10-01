@@ -9,15 +9,19 @@ use App\Http\Resources\InvoiceCollection;
 use App\Models\Invoice;
 use App\Models\Product;
 use App\Services\FormFields\InvoiceFormField;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
     protected Invoice $invoice;
+    protected Product $product;
     protected Array $feature_name;
 
-    public function __construct(Invoice $invoice){
+    public function __construct(Invoice $invoice, Product $product){
         $this->invoice = $invoice;
+        $this->product = $product;
         $this->feature_name['singular'] = 'invoice';
         $this->feature_name['plural'] = 'invoices';
     }
@@ -40,21 +44,16 @@ class InvoiceController extends Controller
      */
     public function create(): View
     {
-        $products = Product::query()->get();
-        $fields = InvoiceFormField::generateFields();
+        $products = $this->product->scopeSelectIdAndNameAsKeyValue();
+        $fields = InvoiceFormField::generateFields([], ['products' => $products->toArray()]);
         return View('admins.invoices.form', ['feature_name' => $this->feature_name,'page' => 'create',
             'fields' => $fields]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\Invoice\StoreRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): RedirectResponse
     {
-        //
+        $product = $this->invoice->create($request->validated());
+        return Redirect::route('products.index')->with('success', 'Successfully create product ' . $product->name);
     }
 
     /**

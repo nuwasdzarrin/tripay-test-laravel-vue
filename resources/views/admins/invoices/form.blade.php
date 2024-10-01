@@ -18,12 +18,19 @@
                             @foreach ($fields as $field)
                                 <div class="mb-3">
                                     <label for="{{ $field->name }}">{{ $field->label }}</label>
-                                    @if ($field->type === 'textarea')
+                                    @if ($field->type == 'textarea')
                                         <textarea class="form-control @error($field->name) is-invalid @enderror"
                                             id="{{ $field->name }}" name="{{ $field->name }}"
                                             {{ $field->required ? 'required' : '' }}>
                                             {{ old($field->name, $field->value) }}
                                         </textarea>
+                                    @elseif ($field->type == 'select')
+                                        <select class="form-select @error($field->name) is-invalid @enderror"
+                                            id="{{ $field->name }}" name="{{ $field->name }}">
+                                            @foreach($field->options as $option)
+                                                <option value="{{$option['key']}}">{{$option['value']}}</option>
+                                            @endforeach
+                                        </select>
                                     @else
                                         <input type="{{ $field->type }}"
                                             class="form-control @error($field->name) is-invalid @enderror"

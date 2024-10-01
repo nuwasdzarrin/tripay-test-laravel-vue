@@ -28,4 +28,9 @@ class Product extends Model
             $q->whereRelation($relation, $column, $filters[$key]);
         });
     }
+
+    public function scopeSelectIdAndNameAsKeyValue()
+    {
+        return $this->query()->select('id as key', 'name as value')->get();
+    }
 }
