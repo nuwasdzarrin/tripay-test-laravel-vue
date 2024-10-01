@@ -33,15 +33,18 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('shops.index') }}">{{ __('Shop') }}</a>
+                        </li>
                         @auth('web')
                             @if (auth()->user()->role == 'seller')
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('products.index') }}">{{ __('Product') }}</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('invoices.index') }}">{{ __('Invoice') }}</a>
-                                </li>
                             @endif
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('invoices.index') }}">{{ __('Invoice') }}</a>
+                            </li>
                         @endauth
                     </ul>
 

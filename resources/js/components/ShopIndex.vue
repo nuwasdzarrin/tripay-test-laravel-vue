@@ -23,10 +23,14 @@ export default {
         fetchPaymentMethod() {
             Apis.payment_method.index({}).then(res => {
                 if (res.status === 200) this.payment_methods = res.data.data;
+            }).catch(err => {
+                if (err.response.status === 401) return window.location.href = '/login';
+                throw err;
             })
         },
-        selectPayment(productId) {
+        async selectPayment(productId) {
             this.product_selected = productId;
+            await this.fetchPaymentMethod();
             const modal = new Modal(this.$refs.paymentModal);
             modal.show();
         },
@@ -37,9 +41,9 @@ export default {
                 product_id: this.product_selected,
                 payment_code: this.payment_selected
             }).then(res => {
-                if (res.status === 201) return window.location.href = '/shops/invoices'
+                if (res.status === 201) return window.location.href = '/shops/invoices';
             }).catch(err => {
-                if (err.response.status === 401) return window.location.href = '/login'
+                if (err.response.status === 401) return window.location.href = '/login';
                 throw err;
             }).finally(() => this.isLoading = false)
         }
@@ -51,7 +55,6 @@ export default {
     },
     mounted() {
         this.fetchProduct();
-        this.fetchPaymentMethod();
     }
 }
 </script>
