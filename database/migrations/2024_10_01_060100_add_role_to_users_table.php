@@ -16,6 +16,7 @@ class AddRoleToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $roles = \App\Models\User::ROLES;
             $table->enum('role', $roles)->default($roles[0]);
+            $table->string('phone_number')->default('081213240016');
         });
     }
 
@@ -27,7 +28,7 @@ class AddRoleToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropColumn('role', 'phone_number');
         });
     }
 }

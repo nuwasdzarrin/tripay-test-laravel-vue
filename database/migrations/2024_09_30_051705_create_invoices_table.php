@@ -19,7 +19,7 @@ class CreateInvoicesTable extends Migration
             $table->string('tripay_reference');
             $table->string('buyer_email');
             $table->string('buyer_phone');
-            $table->string('raw_response');
+            $table->longText('raw_response')->nullable();
             $table->timestamps();
         });
     }

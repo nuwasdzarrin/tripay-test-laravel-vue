@@ -33,8 +33,15 @@ Route::group(['prefix' => 'sellers'], function () {
 Route::group(['prefix' => 'shops'], function () {
     Route::get('/', [ShopController::class, 'index'])->name('shops.index');
     Route::middleware('auth')->group(function () {
-        Route::resource('products', ProductController::class);
-        Route::resource('invoices', InvoiceController::class);
+        Route::get('invoices', [InvoiceController::class, 'index'])->name('shops.invoices');
+    });
+});
+
+Route::group(['prefix' => 'api/v1/'], function () {
+    Route::get('products', [ShopController::class, 'getProduct'])->name('api.v1.products');
+    Route::middleware('auth')->group(function () {
+        Route::get('payment_method', [ShopController::class, 'getPaymentMethod'])->name('api.v1.get_payment_method');
+        Route::post('products/buy', [ShopController::class, 'buyProduct'])->name('api.v1.products.buy');
     });
 });
 

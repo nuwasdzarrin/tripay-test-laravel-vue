@@ -33,7 +33,13 @@
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         @foreach ($fields as $field)
-                                        <td>{{ $datum->{$field->visible} }}</td>
+                                        <td>
+                                            @if($field->visible == 'raw_response')
+                                                <pre>{{ $datum->{$field->visible} }}</pre>
+                                            @else
+                                                {{ $datum->{$field->visible} }}
+                                            @endif
+                                        </td>
                                         @endforeach
                                         <td>
                                             <form id="destroy-invoice-{{$datum->id}}" method="post"
