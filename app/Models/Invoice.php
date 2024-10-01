@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Invoice extends Model
 {
@@ -19,7 +20,7 @@ class Invoice extends Model
 
     public function getFiltered(array $filters, array $appends = []): Collection
     {
-        return $this->filter($filters, '', '', '')
+        return $this->byUser()->filter($filters, '', '', '')
             ->when(array_key_exists('offset', $filters), function ($q) use ($filters) {
                 $q->offset($filters['offset'])->limit($filters['limit']);
             })
@@ -31,6 +32,14 @@ class Invoice extends Model
     {
         return $query->when(array_key_exists($key, $filters), function ($q) use ($filters, $relation, $column, $key) {
             $q->whereRelation($relation, $column, $filters[$key]);
+        });
+    }
+
+    public function scopeByUser($query)
+    {
+        $user = Auth::user();
+        return $query->when($user->role == 'buyer', function ($q) use ($user){
+            $q->where('buyer_email', $user->email);
         });
     }
 

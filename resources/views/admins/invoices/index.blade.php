@@ -13,7 +13,9 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <b>{{ __('List Invoice') }}</b>
+                        @if(auth()->user()->role == 'seller')
                         <a href="{{route('invoices.create')}}" class="btn btn-primary btn-sm">Add Invoice</a>
+                        @endif
                     </div>
                     <div class="card-body">
                         @if(count($data))
