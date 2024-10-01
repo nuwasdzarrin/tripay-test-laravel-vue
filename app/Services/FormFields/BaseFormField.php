@@ -10,8 +10,9 @@ class BaseFormField
     public $value;
     public $options;
     public $required;
+    public $visible;
 
-    public function __construct($name, $label, $type, $value = null, $options = [], $required = false)
+    public function __construct($name, $label, $type, $value = null, $options = [], $required = false, $visible = null)
     {
         $this->name = $name;
         $this->label = $label;
@@ -19,5 +20,6 @@ class BaseFormField
         $this->value = $value;
         $this->options = $options;
         $this->required = $required;
+        $this->visible = $visible ?? $name;
     }
 }

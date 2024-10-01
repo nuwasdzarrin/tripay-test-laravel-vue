@@ -10,7 +10,7 @@
                     </div>
                     <div class="card-body">
                         <form method="post"
-                            action="{{$page == 'create' ? route($feature_name['plural'].'.store') : route($feature_name['plural'].'.update', ['product' => $product])}}">
+                            action="{{$page == 'create' ? route($feature_name['plural'].'.store') : route($feature_name['plural'].'.update', ['invoice' => $invoice])}}">
                             @csrf
                             @if($page == 'edit')
                                 <input type="hidden" name="_method" value="put">
@@ -28,7 +28,10 @@
                                         <select class="form-select @error($field->name) is-invalid @enderror"
                                             id="{{ $field->name }}" name="{{ $field->name }}">
                                             @foreach($field->options as $option)
-                                                <option value="{{$option['key']}}">{{$option['value']}}</option>
+                                                <option value="{{$option['key']}}"
+                                                    {{ (old($field->name, $field->value) == $option['key']) ? 'selected' : ''}}>
+                                                    {{$option['value']}}
+                                                </option>
                                             @endforeach
                                         </select>
                                     @else

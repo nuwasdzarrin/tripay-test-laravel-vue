@@ -13,7 +13,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'product_id' => 'numeric|exists:products,id',
+            'tripay_reference' => 'string|max:255',
+            'buyer_email' => 'email',
+            'buyer_phone' => 'string|max:255',
+            'raw_response' => 'string|nullable',
         ];
     }
 }

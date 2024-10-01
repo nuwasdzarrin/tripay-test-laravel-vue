@@ -33,7 +33,7 @@
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         @foreach ($fields as $field)
-                                        <td>{{ $datum->{$field->name} }}</td>
+                                        <td>{{ $datum->{$field->visible} }}</td>
                                         @endforeach
                                         <td>
                                             <form id="destroy-invoice-{{$datum->id}}" method="post"

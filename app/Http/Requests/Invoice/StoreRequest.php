@@ -25,9 +25,10 @@ class StoreRequest extends FormRequest
     {
         return [
             'product_id' => 'required|numeric|exists:products,id',
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'reference' => 'string|max:255|nullable',
+            'tripay_reference' => 'required|string|max:255',
+            'buyer_email' => 'required|email',
+            'buyer_phone' => 'required|string|max:255',
+            'raw_response' => 'string|nullable',
         ];
     }
 }

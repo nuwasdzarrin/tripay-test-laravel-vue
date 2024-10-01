@@ -25,23 +25,13 @@ class InvoiceController extends Controller
         $this->feature_name['singular'] = 'invoice';
         $this->feature_name['plural'] = 'invoices';
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return View
-     */
     public function index(IndexRequest $request): View
     {
-        $invoices = new InvoiceCollection($this->invoice->getFiltered($request->validated()));
+        $invoices = new InvoiceCollection($this->invoice->getFiltered($request->validated(), ['product_name']));
         $fields = InvoiceFormField::generateFields();
         return View('admins.invoices.index', ['data' => $invoices, 'fields' => $fields]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return View
-     */
     public function create(): View
     {
         $products = $this->product->scopeSelectIdAndNameAsKeyValue();
@@ -53,7 +43,7 @@ class InvoiceController extends Controller
     public function store(StoreRequest $request): RedirectResponse
     {
         $product = $this->invoice->create($request->validated());
-        return Redirect::route('products.index')->with('success', 'Successfully create product ' . $product->name);
+        return Redirect::route('invoices.index')->with('success', 'Successfully create invoice');
     }
 
     /**
@@ -67,37 +57,23 @@ class InvoiceController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Invoice $invoice)
+    public function edit(Invoice $invoice): View
     {
-        //
+        $products = $this->product->scopeSelectIdAndNameAsKeyValue();
+        $fields = InvoiceFormField::generateFields($invoice, ['products' => $products->toArray()]);
+        return View('admins.invoices.form', ['feature_name' => $this->feature_name, 'page' => 'edit',
+            'fields' => $fields, 'invoice' => $invoice]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Invoice\UpdateRequest  $request
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateRequest $request, Invoice $invoice)
+    public function update(UpdateRequest $request, Invoice $invoice): RedirectResponse
     {
-        //
+        $invoice->update($request->validated());
+        return Redirect::route('invoices.index')->with('success', 'Successfully update invoice');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Invoice  $invoice
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Invoice $invoice)
+    public function destroy(Invoice $invoice): RedirectResponse
     {
-        //
+        $invoice->delete();
+        return Redirect::route('invoices.index')->with('success', 'Successfully delete invoice');
     }
 }
